@@ -66,7 +66,7 @@ WriteLn Biometrics.Hash;
 property TBiometrics.Hash: TByteArray;
 var
   i: Integer;
-  hashStr: String;
+  hash: UInt32;
 begin
   if Self.Index <> ProfileIndex then
     Self._Hash := [];
@@ -78,18 +78,18 @@ begin
     for i := 0 to Ord(High(EBiometric)) do
       Self._Hash += Random(256);
 
-    hashStr := String.CreateFromBytes(Self._Hash);
-    DebugLn('Biometrics', 'Random hash created: ' + hashStr, ELogLevel.WARN);
+    hash := UInt32.CreateFromBytes(Self._Hash);
+    DebugLn('Biometrics', 'Random hash created: ' + ToStr(hash), ELogLevel.WARN);
     DebugLn('Biometrics', 'Add an account for a permanent one.', ELogLevel.WARN);
 
     Exit(Self._Hash);
   end;
 
-  hashStr := HashString(EHashAlgo.SHA1, Profiles[ProfileIndex].Name + Profiles[ProfileIndex].Username);
-  DebugLn('Biometrics', 'Current profile seed: ' + hashStr);
+  hash := HashString(Profiles[ProfileIndex].Name + Profiles[ProfileIndex].Username);
+  DebugLn('Biometrics', 'Current profile seed: ' + ToStr(hash));
 
   Self.Index := ProfileIndex;
-  Self._Hash := hashStr.ToBytes();
+  Self._Hash := hash.ToBytes();
   Result := Self._Hash;
 end;
 

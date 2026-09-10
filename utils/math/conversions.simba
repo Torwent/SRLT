@@ -39,6 +39,101 @@ begin
 end;
 
 
+function Int32.ToBytes(): TByteArray;
+begin
+  SetLength(Result, SizeOf(Int32));
+  Move(Self, Result[0], SizeOf(Int32));
+end;
+
+function Int32.CreateFromBytes(bytes: TByteArray): Int32; static;
+begin
+  if Length(bytes) < SizeOf(Int32) then
+    Exit(0);
+
+  Move(bytes[0], Result, SizeOf(Int32));
+end;
+
+function UInt32.ToBytes(): TByteArray;
+begin
+  SetLength(Result, SizeOf(UInt32));
+  Move(Self, Result[0], SizeOf(UInt32));
+end;
+
+function UInt32.CreateFromBytes(bytes: TByteArray): UInt32; static;
+begin
+  if Length(bytes) < SizeOf(UInt32) then
+    Exit(0);
+
+  Move(bytes[0], Result, SizeOf(UInt32));
+end;
+
+function Int64.ToBytes(): TByteArray;
+begin
+  SetLength(Result, SizeOf(Int64));
+  Move(Self, Result[0], SizeOf(Int64));
+end;
+
+function Int64.CreateFromBytes(bytes: TByteArray): Int64; static;
+begin
+  if Length(bytes) < SizeOf(Int64) then
+    Exit(0);
+
+  Move(bytes[0], Result, SizeOf(Int64));
+end;
+
+function UInt64.ToBytes(): TByteArray;
+begin
+  SetLength(Result, SizeOf(UInt64));
+  Move(Self, Result[0], SizeOf(UInt64));
+end;
+
+function UInt64.CreateFromBytes(bytes: TByteArray): UInt64; static;
+begin
+  if Length(bytes) < SizeOf(UInt64) then
+    Exit(0);
+
+  Move(bytes[0], Result, SizeOf(UInt64));
+end;
+
+
+function TIntegerArray.ToBytes(): TByteArray;
+var
+  size, len: Integer;
+begin
+  size := SizeOf(Int32);
+  len := Length(Self);
+
+  SetLength(Result, size + len * size);
+
+  Move(len, Result[0], size);
+  if len > 0 then
+    Move(Self[0], Result[size], len * size);
+end;
+
+function TIntegerArray.CreateFromBytes(bytes: TByteArray): TIntegerArray; static;
+var
+  size, len: Integer;
+begin
+  size := SizeOf(Int32);
+
+  if Length(bytes) < size then
+    Exit;
+
+  Move(bytes[0], len, size);
+
+  if len < 0 then
+    Exit;
+
+  if Length(bytes) < size + len * size then
+    Exit;
+
+  SetLength(Result, len);
+
+  if len > 0 then
+    Move(bytes[size], Result[0], len * size);
+end;
+
+
 function T2DIntegerArray.ToBytes(): TByteArray;
 var
   size, i, len, offset: Integer;
@@ -242,8 +337,6 @@ begin
 end;
 
 
-{$R+}
-
 function TModel.ToBytes(): TByteArray;
 var
   size, offset: Integer;
@@ -358,3 +451,5 @@ begin
   Move(bytes[offset], Result.Height, SizeOf(Single)); Inc(offset, SizeOf(Single));
   Move(bytes[offset], Result.Center, SizeOf(TVector3));
 end;
+
+{$R+}

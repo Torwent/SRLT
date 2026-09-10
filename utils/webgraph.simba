@@ -38,23 +38,34 @@ context visit this [wikipedia page](https://en.wikipedia.org/wiki/Graph_(discret
 
   PWebGraph = ^TWebGraph;
 
-function TWebGraph.TreeHash(): String;
+(*
+## TWebGraph.CRC
+```pascal
+property TWebGraph.CRC: UInt32;
+```
+Returns a CRC signature of the `TWebGraph.Nodes` and `TWebGraph.WalkableClusters`.
+Nothing else is used for the CRC signature, this is just used so we know if we should generate as KDTree for this graph
+or load at an already cached one instead.
+*)
+property TWebGraph.CRC: UInt32;
 var
-  hashes: String;
-  i: Integer;
+  hash: UInt32;
+  len: Integer;
+  clstr: TPointArray;
 begin
-  SetLength(hashes, Length(Self.WalkableClusters) + 1);
-  hashes := HashData(EHashAlgo.CRC32, @Self.Nodes[0], Length(Self.Nodes) * SizeOf(TPoint));
+  if Self.Nodes.IsEmpty then
+    Exit;
 
-  for i := 0 to High(Self.WalkableClusters) do
+  hash := CrcData(@Self.Nodes[0], Length(Self.Nodes) * SizeOf(TPoint));
+
+  for clstr in Self.WalkableClusters do
   begin
-    if Length(Self.WalkableClusters[i]) > 0 then
-      hashes += HashData(EHashAlgo.CRC32, @Self.WalkableClusters[i][0], Length(Self.WalkableClusters[i]) * SizeOf(TPoint))
-    else
-      hashes += '0';
+    len := Length(clstr);
+    if len > 0 then
+      hash += CrcData(@clstr[0], len * SizeOf(TPoint));
   end;
 
-  Result := HashString(EHashAlgo.CRC32, hashes);
+  Result := CrcData(@hash, SizeOf(UInt32));
 end;
 
 (*

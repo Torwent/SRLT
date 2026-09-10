@@ -475,12 +475,12 @@ difference on the top 9 pixels.
 (*
 ### Items._GetShadowHash
 ```pascal
-function TItemInterface._GetShadowHash(slot: Integer): String;
+function TItemInterface._GetShadowHash(slot: Integer): UInt32;
 ```
 Mostly used for debugging, has no real other use currently. In a nutshell, extracts the
 shadow of an item in the specified slot and returns the hash of that shadow.
 *)
-function TItemInterface._GetShadowHash(slot: Integer): String;
+function TItemInterface._GetShadowHash(slot: Integer): UInt32;
 var
   b: TBox;
 begin
@@ -499,12 +499,12 @@ end;
 (*
 ### Items._GetHash
 ```pascal
-function TItemInterface._GetHash(slot: Integer): String;
+function TItemInterface._GetHash(slot: Integer): UInt32;
 function TItemInterface._GetHash(img: TImage): String; overload;
 ```
 Internal method to get an hash of an item in a slot.
 *)
-function TItemInterface._GetHash(slot: Integer): String;
+function TItemInterface._GetHash(slot: Integer): UInt32;
 var
   b: TBox;
 begin
@@ -519,7 +519,7 @@ begin
   Result := ItemFinder.GetHash(Target.GetImage(b));
 end;
 
-function TItemInterface._GetHash(img: TImage): String; overload;
+function TItemInterface._GetHash(img: TImage): UInt32; overload;
 begin
   Result := ItemFinder.GetHash(img);
 end;
@@ -534,19 +534,19 @@ Internal method to get an a `TItemArray` of the possible items in the given `slo
 *)
 function TItemInterface._Recognize(slot: Integer): TItemArray;
 var
-  hash: String;
+  hash: UInt32;
 begin
   hash := Self._GetHash(slot);
-  if hash <> '' then
+  if hash <> 0 then
     Result := ItemFinder.GetHashItems(hash);
 end;
 
 function TItemInterface._Recognize(img: TImage): TItemArray; overload;
 var
-  hash: String;
+  hash: UInt32;
 begin
   hash := Self._GetHash(img);
-  if hash <> '' then
+  if hash <> 0 then
     Result := ItemFinder.GetHashItems(hash);
 end;
 

@@ -422,7 +422,7 @@ end;
 function TMap.Height(pt: TPoint; global: Boolean = True): Single;
 ```
 Returns the height of the player at the specified coordinate if there's a heightmap loaded.
-If `pt` is `[0,0]`, which is the default then we will use our current position.
+If `pt` is `Default(TPoint)` then we will use our current position.
 `global` decides wether the coordinate is converted to {ref}`global points` or if it's meant to be used
 as internal {ref}`local points`.
 
@@ -431,7 +431,7 @@ Example:
 WriteLn Map.Height();
 ```
 *)
-function TMap.Height(pt: TPoint = [0,0]; global: Boolean = True): Single;
+function TMap.Height(pt: TPoint = Default(TPoint); global: Boolean = True): Single;
 var
   neighbours: TPointArray;
   p: TPoint;
@@ -439,7 +439,7 @@ begin
   if Self.DisableHeightmap or not Assigned(Self.Loader.Heightmap) then
     Exit(0.0);
 
-  if pt = [0,0] then
+  if pt = Default(TPoint) then
   begin
     global := False;
     Self.Position();

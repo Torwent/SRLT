@@ -215,11 +215,11 @@ WriteLn GrandExchange.Slots[5].Discover();
 *)
 function TGrandExchangeSlot.Discover(): TItemArray;
 var
-  hash: String;
+  hash: UInt32;
 begin
   hash := ItemFinder.GetHash(Target.GetImage(Self.ItemBox));
-  if hash = '' then Exit;
-  Result := ItemFinder.GetHashItems(hash);
+  if hash <> 0 then
+    Result := ItemFinder.GetHashItems(hash);
 end;
 
 (*

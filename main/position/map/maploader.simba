@@ -504,7 +504,7 @@ begin
   {$ENDIF}
   plane := ToStr(region.Plane);
   path := Self.CacheDir + 'graphs' + PATH_SEP + plane + PATH_SEP + name + '-' +
-          WebGraphGenerator.Hash() + PATH_SEP;
+          ToStr(WebGraphGenerator.CRC) + PATH_SEP;
 
   if
     not FileExists(path + 'nodes.txt') or
@@ -681,7 +681,7 @@ begin
   if not DirCreate(graphPath) then
     raise GetDebugLn('MapLoader', 'Failed to create path: ' + graphPath);
 
-  graphPath += Self.Graph.TreeHash();
+  graphPath += ToStr(Self.Graph.CRC);
 
   {$IFNDEF WL_DEBUG_MAPLOADER}
   if FileExists(graphPath) then

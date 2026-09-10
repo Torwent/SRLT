@@ -33,19 +33,24 @@ Record responsible for generating webgraphs from collision map images.
     BlockedChunks: T3DPointArray;
   end;
 
-function TWebGraphGenerator.Hash(): String;
+(*
+## TWebGraphGenerator.CRC
+```pascal
+property TWebGraphGenerator.CRC: UInt32;
+```
+Returns a CRC signature of the `TWebGraphGenerator`.
+*)
+property TWebGraphGenerator.CRC: UInt32;
 var
   data: TIntegerArray;
-  hash: String;
+  len: Int32;
 begin
   data := [Self.Spacing, Self.MinSpace];
-  Result := HashData(EHashAlgo.CRC32, @data[0], Length(data) * SizeOf(Int32));
+  Result := CrcData(@data[0], Length(data) * SizeOf(Int32));
 
-  if not Self.BlockedChunks.IsEmpty then
-  begin
-    hash := HashData(EHashAlgo.CRC32, @Self.BlockedChunks[0], Length(Self.BlockedChunks) * SizeOf(T3DPoint));
-    Result := HashString(EHashAlgo.CRC32, Result + hash);
-  end;
+  len := Length(Self.BlockedChunks);
+  if len > 0 then
+    Result += CrcData(@Self.BlockedChunks[0], len * SizeOf(T3DPoint));
 end;
 
 (*

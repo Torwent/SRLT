@@ -135,7 +135,7 @@ begin
     begin
       key := Self.JSON.Key[i];
       path := WLEnv.AssetsDir + key;
-      if HashFile(EHashAlgo.CRC32, path) <> Self.JSON.Item[i].AsString then
+      if CRCFile(path) <> Self.JSON.Item[i].AsInt then
       begin
         key := key.Replace('\', '/');
         DebugLn('WLAssets', 'Updating ' + key, ELogLevel.WARN);

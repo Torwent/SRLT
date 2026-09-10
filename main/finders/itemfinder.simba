@@ -203,9 +203,9 @@ begin
   Result := Self.Database.GetAll(item, 'item', 'id');
 end;
 
-function TItemFinder.GetHashItems(hash: String): TItemArray;
+function TItemFinder.GetHashItems(hash: UInt32): TItemArray;
 begin
-  Result := Self.Database.GetAll(hash, 'hash', 'item');
+  Result := Self.Database.GetAll(ToStr(hash), 'hash', 'item');
 end;
 
 procedure TItemFinder.MapItem(item, id: String);
@@ -448,7 +448,7 @@ begin
   display.Show();
 end;
 
-function TItemFinder.GetBorderHash(img: TImage): String;
+function TItemFinder.GetBorderHash(img: TImage): UInt32;
 var
   tpa: TPointArray;
   border: TImage;
@@ -458,19 +458,19 @@ begin
   border := new TImage(36, 32);
   border.DrawColor := $FFFFFF;
   border.DrawTPA(tpa);
-                                           //h*w*4=4608
-  Result := HashData(EHashAlgo.CRC32, border.Data, 4608);
+  Result := CrcData(border.Data, 4608); //h*w*4=4608
 end;
 
-function TItemFinder.GetHash(img: TImage): String;
+function TItemFinder.GetHash(img: TImage): UInt32;
 var
-  hash: String;
+  hash: UInt32;
   bg: TPointArray;
 begin
   hash := Self.GetBorderHash(img);
-  if hash = '' then Exit;
+  if hash = 0 then
+    Exit;
 
-  bg := Self.GetMask(hash).FindColor(Colors.BLACK, 0);
+  bg := Self.GetMask(ToStr(hash)).FindColor(Colors.BLACK, 0);
 
   if ITEM_BORDER <> $010000 then
   begin
@@ -482,7 +482,7 @@ begin
   img.DrawColor := Colors.BLACK;
   img.DrawTPA(bg);
 
-  Result := HashData(EHashAlgo.CRC32, img.Data, 4608);
+  Result := CrcData(img.Data, 4608); //h*w*4=4608
 end;
 
 var

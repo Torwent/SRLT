@@ -414,10 +414,8 @@ function TDepositBox.DepositDifferent(
   items: TItemArray; useQuantityButton: Boolean = True
 ): Boolean;
 var
-  slots: TIntegerArray;
-  slot: Integer;
-  hash: String;
-  deposited: TStringArray;
+  slots, deposited: TIntegerArray;
+  slot, hash: Integer;
 begin
   slots := Self.Items.FindDifferent(items);
   if slots = [] then Exit(True);

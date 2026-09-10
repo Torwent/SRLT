@@ -1301,10 +1301,8 @@ WriteLn Bank.DepositDifferent(['Abyssal whip', 'Bandos chestplate', 'Bandos tass
 *)
 function TBank.DepositDifferent(items: TItemArray; useQuantityButton: Boolean = True): Boolean;
 var
-  slots: TIntegerArray;
-  slot: Integer;
-  hash: String;
-  deposited: TStringArray;
+  slots, deposited: TIntegerArray;
+  slot, hash: Integer;
 begin
   slots := Inventory.Items.FindDifferent(items);
   if slots = [] then Exit(True);
