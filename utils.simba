@@ -1,6 +1,8 @@
 {$SCOPEDENUMS ON}
 {$AUTOINVOKE OFF}
 
+
+{$IFNDEF WL_CACHEREADER_INCLUDED}     {$INCLUDE_ONCE utils/cache-reader/cache.simba}
 {$IFNDEF WL_ENV_INCLUDED}             {$INCLUDE_ONCE utils/env.simba}
 {$IFNDEF WL_GEOMETRY_INCLUDED}        {$INCLUDE_ONCE utils/math/geometry.simba}
 {$IFNDEF WL_RANDOM_INCLUDED}          {$INCLUDE_ONCE utils/math/random.simba}
@@ -33,7 +35,7 @@
 {$IFNDEF WL_LLMCLIENT_INCLUDED}       {$INCLUDE_ONCE utils/clients/llmclient.simba}
 {$IFNDEF WL_CONVERSIONS_INCLUDED}     {$INCLUDE_ONCE utils/math/conversions.simba}
 
-{$ENDIF}
+{$ENDIF}{$ENDIF}
 {$ENDIF}{$ENDIF}{$ENDIF}{$ENDIF}{$ENDIF}{$ENDIF}{$ENDIF}{$ENDIF}{$ENDIF}{$ENDIF}
 {$ENDIF}{$ENDIF}{$ENDIF}{$ENDIF}{$ENDIF}{$ENDIF}{$ENDIF}{$ENDIF}{$ENDIF}{$ENDIF}
 {$ENDIF}{$ENDIF}{$ENDIF}{$ENDIF}{$ENDIF}{$ENDIF}{$ENDIF}{$ENDIF}{$ENDIF}{$ENDIF}

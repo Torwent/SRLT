@@ -323,13 +323,10 @@ type
 Record containing pre-loaded game fonts and common text colors.
 *)
   TFonts = record
-    SMALL,
     PLAIN_11, PLAIN_12,
     BOLD, BOLD_SHADOW,
-    QUILL_8, QUILL,
-    VERDANA_13, VERDANA_13_BOLD, VERDANA_15: TPixelFont;
-    Unzipping: Boolean;
-    Timeout: TCountDown;
+    VERDANA_11, VERDANA_13, VERDANA_15,
+    QUILL_8, QUILL: TPixelFont;
 
     const WHITE: TColor        = $FFFFFF;
     const BLACK: TColor        = $000000;
@@ -347,62 +344,22 @@ Record containing pre-loaded game fonts and common text colors.
     const PATH = WLEnv.CacheDir + 'fonts' + PATH_SEP;
   end;
 
-procedure TFonts.Load();
-begin
-  Self.SMALL := OCR.Engine.LoadFont(Self.PATH + 'Small', 4);
-
-  Self.PLAIN_11 := OCR.Engine.LoadFont(Self.PATH + 'Plain 11', 4);
-  Self.PLAIN_12 := OCR.Engine.LoadFont(Self.PATH + 'Plain 12', 4);
-
-  Self.BOLD        := OCR.Engine.LoadFont(Self.PATH + 'Bold 12', 4);
-  Self.BOLD_SHADOW := OCR.Engine.LoadFont(Self.PATH + 'Bold 12 Shadow', 4);
-
-  Self.QUILL_8 := OCR.Engine.LoadFont(Self.PATH + 'Quill 8', 4);
-  Self.QUILL   := OCR.Engine.LoadFont(Self.PATH + 'Quill', 4);
-
-  Self.VERDANA_13        := OCR.Engine.LoadFont(Self.PATH + 'Verdana 13', 4);
-  Self.VERDANA_13_Bold   := OCR.Engine.LoadFont(Self.PATH + 'Verdana 13 Bold', 4);
-  Self.VERDANA_15        := OCR.Engine.LoadFont(Self.PATH + 'Verdana 15', 4);
-end;
-
-procedure TFonts._UnzipFinished(constref result: TASyncUnzipResult);
-begin
-  if not result.Success then
-  begin
-    DirDelete(Self.PATH, True);
-    raise GetDebugLn('Fonts', 'Failed to unzip fonts: '  + result.Exception);
-  end;
-
-  Self.Load();
-  Self.Unzipping := False;
-end;
-
-procedure TFonts.WaitUnzipping();
-begin
-  while Self.Unzipping do
-  begin
-    Sleep(100);
-    if not Self.Timeout.IsFinished then
-      Continue;
-    DirDelete(Self.PATH, True);
-    raise GetDebugLn('Fonts', 'Timed out unzipping fonts.');
-  end;
-end;
-
 procedure TFonts.Setup();
 begin
-  if DirList(Self.PATH) <> [] then
-  begin
-    Self.Load();
-    Exit;
-  end;
+  FontLoader.Load();
 
-  if not DirCreate(Self.PATH) then
-    raise GetDebugLn('OCR', 'Failed to create path: ' + Self.PATH);
+  Self.PLAIN_11 := OCR.Engine.LoadFont(FontLoader.Fonts[0].GetGlyphImages(), 4);
+  Self.PLAIN_12 := OCR.Engine.LoadFont(FontLoader.Fonts[1].GetGlyphImages(), 4);
 
-  Self.Unzipping := True;
-  Self.Timeout.Start(MINUTE);
-  Async.FileUnZip(WLEnv.AssetsDir + 'fonts' + PATH_SEP + 'fonts.zip', Self.PATH, @Self._UnzipFinished);
+  Self.BOLD        := OCR.Engine.LoadFont(FontLoader.Fonts[2].GetGlyphImages(), 4);
+  Self.BOLD_SHADOW := OCR.Engine.LoadFont(FontLoader.Fonts[2].GetGlyphShadowImages(), 4);
+
+  Self.VERDANA_11 := OCR.Engine.LoadFont(FontLoader.Fonts[3].GetGlyphImages(), 4);
+  Self.VERDANA_13 := OCR.Engine.LoadFont(FontLoader.Fonts[4].GetGlyphImages(), 4);
+  Self.VERDANA_15 := OCR.Engine.LoadFont(FontLoader.Fonts[5].GetGlyphImages(), 4);
+
+  Self.QUILL_8 := OCR.Engine.LoadFont(FontLoader.Fonts[6].GetGlyphImages(), 4);
+  Self.QUILL   := OCR.Engine.LoadFont(FontLoader.Fonts[7].GetGlyphImages(), 4);
 end;
 
 var

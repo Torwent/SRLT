@@ -397,7 +397,7 @@ var
 begin
   case Self.Typ of
     EClient.OFFICIAL: font := @Fonts.PLAIN_12;
-    EClient.RUNELITE: font := @Fonts.SMALL;
+    EClient.RUNELITE: font := @Fonts.PLAIN_11;
     else Exit;
   end;
 

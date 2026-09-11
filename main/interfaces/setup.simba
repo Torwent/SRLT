@@ -169,6 +169,8 @@ begin
   if not DirCreate(WLEnv.VideosDir) then
     raise GetDebugLn('WaspLib', 'Failed to create path: ' + WLEnv.VideosDir);
 
+  CacheReader := TCacheReader.Create();
+
   WaspClient.Setup();
   WLAssets.Update();
   Map.Loader.Init();
@@ -228,8 +230,6 @@ begin
   ObjectsJSON.Setup(EMapJSON.OBJECTS);
   NPCsJSON.Setup(EMapJSON.NPCS);
   Profiles.Load();
-
-  Fonts.WaitUnzipping();
 
   ItemFinder.WaitUnzipping();
 
